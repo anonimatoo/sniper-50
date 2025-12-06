@@ -271,3 +271,61 @@
             </div>
             <div style='text-align:center;'>
                 <p style='color:#666; margin-bottom:20px; font-size:0.95rem; line-height: 1.5;'>Detectamos seu i
+        <div style='text-align:center; margin-top:50px;'>
+            <button class='btn-ml' onclick='openCheckout()' style='max-width:500px; margin:0 auto;'> GARANTIR MINHA LICENÇA AGORA </button>
+            <p style='margin-top: 15px; color: #888; font-size: 0.9rem;'><i class='fas fa-lock'></i> Pagamento Processado via InfinitePay</p>
+        </div>
+    </div>
+
+    <footer style='background:#fff; padding:40px 0; text-align:center; margin-top:60px; color:#999; font-size:0.9rem; border-top:1px solid #eee;'>
+        <p>Copyright &#169; 2025 Nexus E-com Solutions. Todos os direitos reservados.</p>
+        <div class='no-items section' id='footer-section'></div>
+    </footer>
+
+    <a class='whatsapp-float' href='https://wa.me/5513991052512?text=Dúvidas%20sobre%20o%20Sniper' target='_blank'><i class='fab fa-whatsapp'></i></a>
+
+    <div class='modal-overlay' id='checkoutModal'>
+        <div class='checkout-modal'>
+            <span class='close-modal' onclick='closeCheckout()'>&#215;</span>
+            <div class='modal-header'>
+                <h3><i class='fas fa-lock'></i> Acesso VIP</h3>
+                <p class='modal-subtext'>Preencha para liberar o download do <strong>Sniper .50</strong></p>
+            </div>
+            <form id='leadForm'>
+                <div class='form-group'>
+                    <label>Nome Completo</label>
+                    <input id='clientName' placeholder='Digite seu nome' required='required' type='text'/>
+                </div>
+                <div class='form-group'>
+                    <label>WhatsApp (com DDD)</label>
+                    <input id='clientPhone' placeholder='(00) 00000-0000' required='required' type='tel'/>
+                </div>
+                <div class='form-group'>
+                    <label>E-mail Principal</label>
+                    <input id='clientEmail' placeholder='seu@email.com' required='required' type='email'/>
+                </div>
+                <button class='btn-ml' id='btnSubmit' onclick='processCheckout(event)' style='margin-top:10px; font-size: 1.1rem; animation: none;' type='submit'> 
+                    <i class='fas fa-credit-card'></i> IR PARA O PAGAMENTO
+                </button>
+                
+                <button class='btn-pix' id='btnPix' onclick='processPix(event)' type='button'>
+                    <i class='fas fa-qrcode'></i> PAGAR COM PIX (5% OFF)
+                </button>
+                
+                <div style='text-align:center; margin-top:20px; font-size:0.75rem; color:#888; background: #f9f9f9; padding: 10px; border-radius: 5px;'>
+                    <i class='fas fa-shield-alt' style='color:var(--green-success);'></i> Ambiente criptografado 256-bit SSL.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class='modal-overlay' id='receiptModal'>
+        <div class='checkout-modal'>
+            <span class='close-modal' onclick='closeReceipt()'>&#215;</span>
+            <div class='modal-header'>
+                <h3><i class='fab fa-whatsapp' style='color:#25d366;'></i> Quase lá!</h3>
+                <p class='modal-subtext'>Envie o comprovante para receber o <strong>Token de Ativação</strong>.</p>
+            </div>
+            <div style='text-align:center;'>
+                <p style='color:#666; margin-bottom:20px; font-size:0.95rem; line-height: 1.5;'>Detectamos seu i
+

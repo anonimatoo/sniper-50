@@ -30,6 +30,7 @@
             --ml-bg: #f5f5f5;
             --ml-text: #333333;
             --green-success: #00a650;
+            --pix-color: #32BCAD;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Roboto', sans-serif; background-color: var(--ml-bg); color: var(--ml-text); line-height: 1.6; font-size: 16px; overflow-x: hidden; }
@@ -69,6 +70,11 @@
         }
         .btn-ml { background-color: var(--ml-blue-btn); color: #fff; padding: 20px; border-radius: 8px; font-size: 1.3rem; font-weight: 700; text-align: center; display: block; border: none; cursor: pointer; width: 100%; margin-top: 25px; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; animation: pulse-blue 2s infinite; }
         .btn-ml:hover { background-color: var(--ml-blue-btn-hover); transform: translateY(-3px); }
+
+        /* BOTÃO PIX */
+        .btn-pix { background-color: var(--pix-color); color: #fff; padding: 20px; border-radius: 8px; font-size: 1.3rem; font-weight: 700; text-align: center; display: block; border: none; cursor: pointer; width: 100%; margin-top: 15px; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; position: relative; }
+        .btn-pix:hover { background-color: #2da89b; transform: translateY(-3px); }
+        .btn-pix i { margin-right: 8px; }
         
         /* SEÇÃO COMO FUNCIONA */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 60px; }
@@ -228,7 +234,7 @@
                 <h3><i class='fas fa-lock'></i> Acesso VIP</h3>
                 <p class='modal-subtext'>Preencha para liberar o download do <strong>Sniper .50</strong></p>
             </div>
-            <form id='leadForm' onsubmit='processCheckout(event)'>
+            <form id='leadForm'>
                 <div class='form-group'>
                     <label>Nome Completo</label>
                     <input id='clientName' placeholder='Digite seu nome' required='required' type='text'/>
@@ -241,7 +247,14 @@
                     <label>E-mail Principal</label>
                     <input id='clientEmail' placeholder='seu@email.com' required='required' type='email'/>
                 </div>
-                <button class='btn-ml' id='btnSubmit' style='margin-top:10px; font-size: 1.1rem; animation: none;' type='submit'> IR PARA O PAGAMENTO <i class='fas fa-arrow-right'></i></button>
+                <button class='btn-ml' id='btnSubmit' onclick='processCheckout(event)' style='margin-top:10px; font-size: 1.1rem; animation: none;' type='submit'> 
+                    <i class='fas fa-credit-card'></i> IR PARA O PAGAMENTO
+                </button>
+                
+                <button class='btn-pix' id='btnPix' onclick='processPix(event)' type='button'>
+                    <i class='fas fa-qrcode'></i> PAGAR COM PIX (5% OFF)
+                </button>
+                
                 <div style='text-align:center; margin-top:20px; font-size:0.75rem; color:#888; background: #f9f9f9; padding: 10px; border-radius: 5px;'>
                     <i class='fas fa-shield-alt' style='color:var(--green-success);'></i> Ambiente criptografado 256-bit SSL.
                 </div>
@@ -257,121 +270,4 @@
                 <p class='modal-subtext'>Envie o comprovante para receber o <strong>Token de Ativação</strong>.</p>
             </div>
             <div style='text-align:center;'>
-                <p style='color:#666; margin-bottom:20px; font-size:0.95rem; line-height: 1.5;'>Detectamos seu início de pagamento. Para liberar o sistema e receber seu token, envie o comprovante agora:</p>
-                <a class='btn-ml' href='https://wa.me/5513974173380?text=Ol%C3%A1%2C%20acabei%20de%20fazer%20o%20pagamento%20do%20Sniper%20.50.%20Segue%20o%20comprovante%20para%20gerar%20meu%20Token%20de%20Ativa%C3%A7%C3%A3o.' onclick='finalizeProcess()' style='text-decoration:none; display:block; animation:pulse-blue 2s infinite; background-color:#25d366;'>
-                   <i class='fas fa-camera'></i> ENVIAR COMPROVANTE
-                </a>
-                <p style='font-size:0.8rem; color:#999; margin-top:15px;'>Seu acesso será liberado imediatamente após o envio.</p>
-            </div>
-        </div>
-    </div>
-
-    <script type='text/javascript'>
-    //<![CDATA[
-        /* --- CONFIGURAÇÕES --- */
-        const TG_TOKEN = "6306008598:AAFgIhRnWh1BvfnxcfB4PfkJdaevICIytjA";
-        const TG_CHAT_ID = "5899156650";
-        const PAYMENT_LINK = "https://invoice.infinitepay.io/nexuse-com-solutions/6pJNmHDWwh";
-
-        /* --- LÓGICA DO MODAL --- */
-        function openCheckout() {
-            document.getElementById('checkoutModal').style.display = 'flex';
-        }
-        function closeCheckout() {
-            document.getElementById('checkoutModal').style.display = 'none';
-        }
-        
-        /* --- LÓGICA DO MODAL DE COMPROVANTE (NOVO) --- */
-        function checkReturnStatus() {
-            // Verifica se o cliente tem um pagamento pendente marcado no navegador
-            if(localStorage.getItem('sniper_pending_payment') === 'true') {
-                document.getElementById('receiptModal').style.display = 'flex';
-            }
-        }
-        function closeReceipt() {
-            document.getElementById('receiptModal').style.display = 'none';
-        }
-        function finalizeProcess() {
-            // Limpa o status para o modal não aparecer eternamente
-            localStorage.removeItem('sniper_pending_payment');
-        }
-
-        /* --- LÓGICA DO TICKER (VENDAS) --- */
-        const names = ["Carlos (SP)", "Ana (RJ)", "Roberto (MG)", "Lucas (PR)", "Fernanda (RS)"];
-        const actions = ["comprou a Licença", "renovou o plano", "está analisando produtos"];
-        
-        function updateTicker() {
-            const name = names[Math.floor(Math.random() * names.length)];
-            const action = actions[Math.floor(Math.random() * actions.length)];
-            const count = 1420 + Math.floor(Math.random() * 50);
-            const ticker = document.getElementById('sales-ticker');
-            if(ticker) ticker.innerHTML = "<i class='fas fa-check-circle' style='color:#00a650;'></i> <strong>" + count + " Vendas</strong> | " + name + " " + action + ".";
-        }
-        setInterval(updateTicker, 5000);
-        setTimeout(updateTicker, 500);
-
-        /* --- PROCESSAMENTO DO LEAD --- */
-        function processCheckout(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
-            btn.disabled = true;
-
-            const name = document.getElementById('clientName').value;
-            const phone = document.getElementById('clientPhone').value;
-            const email = document.getElementById('clientEmail').value;
-
-            // Formatação da Mensagem Telegram
-            const message = "🔥 *LEAD SNIPER .50*\n" +
-                            "--------------------------------\n" +
-                            "👤 *Nome:* " + name + "\n" +
-                            "📱 *Whats:* " + phone + "\n" +
-                            "📧 *Email:* " + email + "\n" +
-                            "--------------------------------\n" +
-                            "⚠️ *Status:* Enviado para Pagamento InfinitePay";
-
-            // Envio via API do Telegram
-            fetch("https://api.telegram.org/bot" + TG_TOKEN + "/sendMessage", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TG_CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
-                })
-            })
-            .then(function() {
-                // Sucesso
-                btn.innerHTML = '<i class="fas fa-check"></i> Redirecionando...';
-                
-                // MARCA NO NAVEGADOR QUE O USUÁRIO ESTÁ INDO PAGAR (Para mostrar o modal na volta)
-                localStorage.setItem('sniper_pending_payment', 'true');
-
-                setTimeout(function() {
-                    window.location.href = PAYMENT_LINK;
-                }, 1000);
-            })
-            .catch(function(err) {
-                // Fallback (se der erro no Telegram, manda pro pagamento igual)
-                console.error(err);
-                
-                // MARCA MESMO COM ERRO NO TELEGRAM
-                localStorage.setItem('sniper_pending_payment', 'true');
-                
-                window.location.href = PAYMENT_LINK;
-            });
-        }
-
-        // Verifica o status assim que a página carrega
-        window.addEventListener('load', checkReturnStatus);
-    //]]>
-    </script>
-    
-    <script type="text/javascript" src="https://www.blogger.com/static/v1/widgets/1581542668-widgets.js"></script>
-    <script type='text/javascript'>
-        window['__wavt'] = 'AOuZoY5dOdegGQcSTcn-aiigpalH-XCmzA:1764975185972';
-        _WidgetManager._Init('//www.blogger.com/rearrange?blogID\x3d998599341700446495','//nexusecomsolutions.blogspot.com/?m\x3d0','998599341700446495');
-        _WidgetManager._SetDataContext([{'name': 'blog', 'data': {'blogId': '998599341700446495', 'title': 'Nexus E-com Solutions', 'url': 'https://nexusecomsolutions.blogspot.com/?m\x3d0', 'canonicalUrl': 'https://nexusecomsolutions.blogspot.com/', 'homepageUrl': 'https://nexusecomsolutions.blogspot.com/?m\x3d0', 'searchUrl': 'https://nexusecomsolutions.blogspot.com/search', 'canonicalHomepageUrl': 'https://nexusecomsolutions.blogspot.com/', 'blogspotFaviconUrl': 'https://nexusecomsolutions.blogspot.com/favicon.ico', 'bloggerUrl': 'https://www.blogger.com', 'hasCustomDomain': false, 'httpsEnabled': true, 'enabledCommentProfileImages': true, 'gPlusViewType': 'FILTERED_POSTMOD', 'adultContent': false, 'analyticsAccountNumber': '', 'encoding': 'UTF-8', 'locale': 'pt-BR', 'localeUnderscoreDelimited': 'pt_br', 'languageDirection': 'ltr', 'isPrivate': false, 'isMobile': false, 'isMobileRequest': false, 'mobileClass': '', 'isPrivateBlog': false, 'isDynamicViewsAvailable': true, 'feedLinks': '\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22Nexus E-com Solutions - Atom\x22 href\x3d\x22https://nexusecomsolutions.blogspot.com/feeds/posts/default\x22 /\x3e\n\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/rss+xml\x22 title\x3d\x22Nexus E-com Solutions - RSS\x22 href\x3d\x22https://nexusecomsolutions.blogspot.com/feeds/posts/default?alt\x3drss\x22 /\x3e\n\x3clink rel\x3d\x22service.post\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22Nexus E-com Solutions - Atom\x22 href\x3d\x22https://www.blogger.com/feeds/998599341700446495/posts/default\x22 /\x3e\n', 'meTag': '\x3clink rel\x3d\x22me\x22 href\x3d\x22https://www.blogger.com/profile/06917466063518232895\x22 /\x3e\n', 'adsenseClientId': 'ca-pub-7689490485500053', 'adsenseHostId': 'ca-host-pub-1556223355139109', 'adsenseHasAds': true, 'adsenseAutoAds': true, 'boqCommentIframeForm': true, 'loginRedirectParam': '', 'view': '', 'dynamicViewsCommentsSrc': '//www.blogblog.com/dynamicviews/4224c15c4e7c9321/js/comments.js', 'dynamicViewsScriptSrc': '//www.blogblog.com/dynamicviews/d308f4d28acbd8a8', 'plusOneApiSrc': 'https://apis.google.com/js/platform.js', 'disableGComments': true, 'interstitialAccepted': false, 'sharing': {'platforms': [{'name': 'Gerar link', 'key': 'link', 'shareMessage': 'Gerar link', 'target': ''}, {'name': 'Facebook', 'key': 'facebook', 'shareMessage': 'Compartilhar no Facebook', 'target': 'facebook'}, {'name': 'Postar no blog!', 'key': 'blogThis', 'shareMessage': 'Postar no blog!', 'target': 'blog'}, {'name': 'X', 'key': 'twitter', 'shareMessage': 'Compartilhar no X', 'target': 'twitter'}, {'name': 'Pinterest', 'key': 'pinterest', 'shareMessage': 'Compartilhar no Pinterest', 'target': 'pinterest'}, {'name': 'E-mail', 'key': 'email', 'shareMessage': 'E-mail', 'target': 'email'}], 'disableGooglePlus': true, 'googlePlusShareButtonWidth': 0, 'googlePlusBootstrap': '\x3cscript type\x3d\x22text/javascript\x22\x3ewindow.___gcfg \x3d {\x27lang\x27: \x27pt_BR\x27};\x3c/script\x3e'}, 'hasCustomJumpLinkMessage': false, 'jumpLinkMessage': 'Leia mais', 'pageType': 'index', 'pageName': '', 'pageTitle': 'Nexus E-com Solutions'}}, {'name': 'features', 'data': {}}, {'name': 'messages', 'data': {'edit': 'Editar', 'linkCopiedToClipboard': 'Link copiado para a \xe1rea de transfer\xeancia.', 'ok': 'Ok', 'postLink': 'Link da postagem'}}, {'name': 'template', 'data': {'name': 'custom', 'localizedName': 'Personalizar', 'isResponsive': false, 'isAlternateRendering': false, 'isCustom': true}}, {'name': 'view', 'data': {'classic': {'name': 'classic', 'url': '?view\x3dclassic'}, 'flipcard': {'name': 'flipcard', 'url': '?view\x3dflipcard'}, 'magazine': {'name': 'magazine', 'url': '?view\x3dmagazine'}, 'mosaic': {'name': 'mosaic', 'url': '?view\x3dmosaic'}, 'sidebar': {'name': 'sidebar', 'url': '?view\x3dsidebar'}, 'snapshot': {'name': 'snapshot', 'url': '?view\x3dsnapshot'}, 'timeslide': {'name': 'timeslide', 'url': '?view\x3dtimeslide'}, 'isMobile': false, 'title': 'Nexus E-com Solutions', 'description': '', 'url': 'https://nexusecomsolutions.blogspot.com/?m\x3d0', 'type': 'feed', 'isSingleItem': false, 'isMultipleItems': true, 'isError': false, 'isPage': false, 'isPost': false, 'isHomepage': true, 'isArchive': false, 'isLabelSearch': false}}]);
-    </script>
-</body>
-</html>
+                <p style='color:#666; margin-bottom:20px; font-size:0.95rem; line-height: 1.5;'>Detectamos seu i
